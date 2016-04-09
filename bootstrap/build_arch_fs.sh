@@ -125,6 +125,11 @@ pacman-key --lsign-key $BUILDER_KEY
 debug "Done setting up keys"
 
 log "Installing packages to new root.."
+# TODO(hkjn): Figure out why following fails with mount: permission denied
+# ==> ERROR: failed to setup chroot /var/tmp/rootfs-archlinux-TT11LA2AUw
+# It seems to work when run interactively with docker run
+# --privileged; missing permissions when "docker build" RUNs this
+# script?
 pacstrap -C /etc/pacman_chroot.conf -c -d $ROOTFS base haveged --ignore $PKGIGNORE
 
 debug "Removing /usr/share/man/* inside chroot.."
