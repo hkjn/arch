@@ -5,12 +5,6 @@
 # Given a {{BASE}} image with a functional arch below, this allows
 # bootstrapping a new Docker image with no other dependencies than Docker.
 #
-# TODO(hkjn): The bootstrap.sh script doesn't work, instead do:
-# $ docker run -it --privileged --name arch-build -v $(pwd):/origin hkjn/armv7l-arch-base bash
-# # cp /origin/pacman.conf /etc/pacman_chroot.conf
-# # cp /origin/build_arch_fs /usr/local/bin/
-# # build_arch_fs.sh
-#
 FROM {{BASE}}
 
 # TODO(hkjn): Try using the same pacman.conf in the bootstrap image as
