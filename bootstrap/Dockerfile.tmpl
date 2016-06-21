@@ -11,8 +11,7 @@ FROM {{BASE}}
 # well (currently only used within the chroot environment for the new
 # install).
 COPY pacman.conf /etc/pacman_chroot.conf
-WORKDIR /usr/bin/
+WORKDIR /usr/local/bin/
 COPY build_arch_fs.sh ./
 
-RUN ["./build_arch_fs.sh"]
-CMD ["bash"]
+CMD ["./build_arch_fs.sh"]
