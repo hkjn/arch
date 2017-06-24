@@ -11,9 +11,9 @@ IMAGE=${IMAGE:-hkjn/arch-bootstrap}
 # architecture to have an environment to build our image. See armv7l/
 # directory for an example on how to build such a base image from a
 # precompiled binary.
-[ $(docker images | grep $BASE | wc -l) -ne 0 ] || {
-	echo "No such BASE image: $BASE" >&2
-	exit 1
+[[ $(docker images | grep $BASE | wc -l) -ne 0 ]] || {
+	echo "No such BASE image: $BASE. Attempting to pull.." >&2
+  docker pull $BASE
 }
 
 LOG_PREFIX="$(basename $0)"
