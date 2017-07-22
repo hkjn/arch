@@ -14,4 +14,4 @@ COPY pacman.conf /etc/pacman_chroot.conf
 WORKDIR /usr/local/bin/
 COPY build_arch_fs.sh ./
 
-CMD ["./build_arch_fs.sh"]
+ENTRYPOINT ["build_arch_fs.sh"]

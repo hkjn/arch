@@ -25,10 +25,10 @@ log() {
 }
 
 log "Building new archlinux.tar.xz from $BASE image.."
-tmp="$(mktemp -d)"
-sed -e "s|{{BASE}}|${BASE}|g" bootstrap/Dockerfile.tmpl > $tmp/Dockerfile
-cp -r bootstrap/*.{conf,sh} $tmp/
-docker build -t $IMAGE $tmp/
+BUILD_DIR="$(mktemp -d)"
+sed -e "s|{{BASE}}|${BASE}|g" bootstrap/Dockerfile.tmpl > $BUILD_DIR/Dockerfile
+cp -r bootstrap/*.{conf,sh} $BUILD_DIR/
+docker build -t $IMAGE $BUILD_DIR/
 [ -e .bootstrap.cid ] && {
 	log "Cleaning up old container.."
 	docker rm $(cat .bootstrap.cid) 1>/dev/null || true
@@ -36,16 +36,15 @@ docker build -t $IMAGE $tmp/
 }
 log "Running bootstrap container.."
 # TODO(hkjn): Add only specific capabilities needed, drop the rest.
-docker run -it --cidfile=.bootstrap.cid --privileged $IMAGE
-CID=$(cat .bootstrap.cid)
-[ -e archlinux.tar.xz ] && {
+docker run -it --name arch-bootstrap --privileged $IMAGE
+[[ -e archlinux.tar.xz ]] && {
 	# Keep the last built filesystem archive around so we can compare
 	# changes to e.g. minimize size.
 	log "Renaming existing archlinux.tar.xz as -last.."
 	mv archlinux.tar.xz archlinux-last.tar.xz
 }
 log "Copying out archlinux.tar.xz from bootstrap container.."
-docker cp $CID:/archlinux.tar.xz .
+docker cp arch-bootstrap:/archlinux.tar.xz .
 # Clean up container and the bootstrap image.
 docker rm $CID
 log "All done."
